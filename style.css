@@ -1,0 +1,479 @@
+/* 私人秘书 - 样式文件 */
+
+#ps-container {
+  padding: 10px;
+  max-width: 100%;
+}
+
+.ps-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: var(--SmartThemeBodyColor);
+}
+
+/* TickTick 同步区域 */
+.ps-ticktick-section {
+  background: var(--SmartThemeBlurTintColor);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--SmartThemeBorderColor);
+}
+
+.ps-ticktick-header {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: var(--SmartThemeBodyColor);
+}
+
+.ps-ticktick-header i {
+  margin-right: 5px;
+  color: #4285f4;
+}
+
+.ps-token-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ps-token-row input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: 4px;
+  background: var(--SmartThemeInputBgColor, #fff);
+  color: #000;
+  font-size: 12px;
+}
+
+.ps-btn-icon {
+  background: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  color: var(--SmartThemeBodyColor);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ps-btn-icon:hover {
+  background: var(--SmartThemeQuoteColor);
+}
+
+.ps-btn-secondary {
+  background: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  color: var(--SmartThemeBodyColor);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.ps-btn-secondary:hover {
+  background: var(--SmartThemeQuoteColor);
+}
+
+.ps-sync-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ps-btn-sync {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ps-btn-sync:hover {
+  opacity: 0.9;
+}
+
+.ps-btn-sync:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ps-sync-status {
+  font-size: 12px;
+  color: var(--SmartThemeQuoteColor);
+}
+
+.ps-sync-status.success {
+  color: #2ecc71;
+}
+
+.ps-sync-status.error {
+  color: #e74c3c;
+}
+
+.ps-main {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* 日历区域 */
+.ps-calendar-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.ps-calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.ps-nav-btn {
+  background: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  color: var(--SmartThemeBodyColor);
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ps-nav-btn:hover {
+  background: var(--SmartThemeQuoteColor);
+}
+
+#ps-current-month {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.ps-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.ps-calendar-header {
+  text-align: center;
+  padding: 5px;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--SmartThemeQuoteColor);
+}
+
+.ps-calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--SmartThemeBlurTintColor);
+  border: 1px solid transparent;
+  position: relative;
+  min-height: 32px;
+}
+
+.ps-calendar-day:hover:not(.empty) {
+  background: var(--SmartThemeQuoteColor);
+}
+
+.ps-calendar-day.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.ps-calendar-day.today {
+  border-color: var(--SmartThemeQuoteColor);
+  font-weight: bold;
+}
+
+.ps-calendar-day.selected {
+  background: var(--SmartThemeQuoteColor);
+  border-color: var(--SmartThemeBodyColor);
+}
+
+.ps-day-number {
+  font-size: 12px;
+}
+
+.ps-task-dots {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.ps-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ps-dot.urgent-important {
+  background-color: #e74c3c;
+}
+.ps-dot.not-urgent-important {
+  background-color: #f1c40f;
+}
+.ps-dot.urgent-not-important {
+  background-color: #3498db;
+}
+.ps-dot.not-urgent-not-important {
+  background-color: #2ecc71;
+}
+
+/* 任务区域 */
+.ps-task-section {
+  flex: 1.5;
+  min-width: 280px;
+}
+
+.ps-selected-date {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: var(--SmartThemeBlurTintColor);
+  border-radius: 4px;
+}
+
+/* 添加任务表单 */
+.ps-add-task-form {
+  background: var(--SmartThemeBlurTintColor);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.ps-add-task-form input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: 4px;
+  background: var(--SmartThemeInputBgColor, #fff);
+  color: #000;
+  box-sizing: border-box;
+}
+
+.ps-add-task-form input[type="text"]::placeholder {
+  color: #999;
+}
+
+.ps-form-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ps-form-row:last-child {
+  margin-bottom: 0;
+}
+
+.ps-time-row {
+  align-items: center;
+}
+
+.ps-time-separator {
+  color: #000;
+  font-weight: bold;
+  padding: 0 4px;
+}
+
+.ps-form-row input,
+.ps-form-row select {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: 4px;
+  background: var(--SmartThemeInputBgColor, #fff);
+  color: #000;
+}
+
+.ps-btn-primary {
+  background: var(--SmartThemeQuoteColor);
+  color: var(--SmartThemeBodyColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ps-btn-primary:hover {
+  opacity: 0.8;
+}
+
+/* 任务列表 */
+.ps-task-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.ps-no-tasks {
+  text-align: center;
+  padding: 20px;
+  color: var(--SmartThemeQuoteColor);
+  font-style: italic;
+}
+
+.ps-task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  background: var(--SmartThemeBlurTintColor);
+}
+
+.ps-task-item.urgent-important {
+  border-left-color: #e74c3c;
+}
+.ps-task-item.not-urgent-important {
+  border-left-color: #f1c40f;
+}
+.ps-task-item.urgent-not-important {
+  border-left-color: #3498db;
+}
+.ps-task-item.not-urgent-not-important {
+  border-left-color: #2ecc71;
+}
+
+.ps-task-item.completed {
+  opacity: 0.6;
+}
+
+.ps-task-item.completed .ps-task-title {
+  text-decoration: line-through;
+}
+
+.ps-task-checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.ps-task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ps-task-title {
+  font-size: 14px;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.ps-task-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--SmartThemeQuoteColor);
+}
+
+.ps-task-time i {
+  margin-right: 3px;
+}
+
+.ps-task-priority-label {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+.ps-task-item.urgent-important .ps-task-priority-label {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+.ps-task-item.not-urgent-important .ps-task-priority-label {
+  background: rgba(241, 196, 15, 0.2);
+  color: #f1c40f;
+}
+.ps-task-item.urgent-not-important .ps-task-priority-label {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+.ps-task-item.not-urgent-not-important .ps-task-priority-label {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.ps-task-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.ps-btn-delete {
+  background: transparent;
+  border: none;
+  color: var(--SmartThemeQuoteColor);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.ps-btn-delete:hover {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+/* 已同步标记 */
+.ps-synced-badge {
+  color: #4285f4;
+  font-size: 11px;
+  margin-left: 5px;
+}
+
+.ps-task-item.synced {
+  border-right: 3px solid #4285f4;
+}
+
+/* 图例 */
+.ps-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  background: var(--SmartThemeBlurTintColor);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.ps-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ps-legend .ps-dot {
+  width: 10px;
+  height: 10px;
+}
+
+/* 滚动条样式 */
+.ps-task-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ps-task-list::-webkit-scrollbar-track {
+  background: var(--SmartThemeBlurTintColor);
+  border-radius: 3px;
+}
+
+.ps-task-list::-webkit-scrollbar-thumb {
+  background: var(--SmartThemeQuoteColor);
+  border-radius: 3px;
+}

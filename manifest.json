@@ -1,0 +1,12 @@
+{
+  "display_name": "私人秘书",
+  "loading_order": 100,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "homePage": "",
+  "auto_update": true
+}
