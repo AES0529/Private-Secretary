@@ -127,6 +127,17 @@
 .ps-calendar-section {
   flex: 1;
   min-width: 250px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .ps-calendar-nav {
@@ -176,16 +187,29 @@
   align-items: center;
   justify-content: center;
   padding: 2px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  background: var(--SmartThemeBlurTintColor);
-  border: 1px solid transparent;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   min-height: 32px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ps-calendar-day:hover:not(.empty) {
-  background: var(--SmartThemeQuoteColor);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.08)
+  );
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .ps-calendar-day.empty {
@@ -194,13 +218,25 @@
 }
 
 .ps-calendar-day.today {
-  border-color: var(--SmartThemeQuoteColor);
+  border-color: #4285f4;
   font-weight: bold;
+  background: linear-gradient(
+    145deg,
+    rgba(66, 133, 244, 0.2),
+    rgba(66, 133, 244, 0.1)
+  );
+  box-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
 }
 
 .ps-calendar-day.selected {
-  background: var(--SmartThemeQuoteColor);
-  border-color: var(--SmartThemeBodyColor);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.25),
+    rgba(255, 255, 255, 0.15)
+  );
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .ps-day-number {
@@ -236,6 +272,17 @@
 .ps-task-section {
   flex: 1.5;
   min-width: 280px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .ps-selected-date {
@@ -331,24 +378,50 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
   border-left: 4px solid;
-  background: var(--SmartThemeBlurTintColor);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.ps-task-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .ps-task-item.urgent-important {
   border-left-color: #e74c3c;
+  background: linear-gradient(
+    135deg,
+    rgba(231, 76, 60, 0.18),
+    rgba(231, 76, 60, 0.05)
+  );
 }
 .ps-task-item.not-urgent-important {
   border-left-color: #f1c40f;
+  background: linear-gradient(
+    135deg,
+    rgba(241, 196, 15, 0.18),
+    rgba(241, 196, 15, 0.05)
+  );
 }
 .ps-task-item.urgent-not-important {
   border-left-color: #3498db;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.18),
+    rgba(52, 152, 219, 0.05)
+  );
 }
 .ps-task-item.not-urgent-not-important {
   border-left-color: #2ecc71;
+  background: linear-gradient(
+    135deg,
+    rgba(46, 204, 113, 0.18),
+    rgba(46, 204, 113, 0.05)
+  );
 }
 
 .ps-task-item.completed {
@@ -476,4 +549,148 @@
 .ps-task-list::-webkit-scrollbar-thumb {
   background: var(--SmartThemeQuoteColor);
   border-radius: 3px;
+}
+
+/* 清理区域 */
+.ps-cleanup-section {
+  margin-top: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--SmartThemeBlurTintColor);
+  border-radius: 4px;
+  border: 1px solid var(--SmartThemeBorderColor);
+}
+
+.ps-btn-cleanup {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.ps-btn-cleanup:hover {
+  background: #f57c00;
+}
+
+.ps-cleanup-status {
+  font-size: 12px;
+  color: var(--SmartThemeBodyColor);
+}
+
+.ps-cleanup-status.success {
+  color: #2ecc71;
+}
+
+.ps-cleanup-status.error {
+  color: #e74c3c;
+}
+
+/* 编辑按钮 */
+.ps-btn-edit {
+  background: transparent;
+  border: none;
+  color: #4a9eff;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.ps-btn-edit:hover {
+  color: #2d7cd6;
+  background: rgba(74, 158, 255, 0.1);
+}
+
+/* 编辑模式 */
+.ps-task-item.editing {
+  background: var(--SmartThemeBlurTintColor);
+  padding: 12px;
+  border-left-width: 4px;
+}
+
+.ps-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.ps-edit-form input[type="text"],
+.ps-edit-form input[type="date"],
+.ps-edit-form input[type="time"],
+.ps-edit-form select {
+  padding: 6px 10px;
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: 4px;
+  background: var(--SmartThemeInputBgColor, #fff);
+  color: #000;
+  font-size: 12px;
+}
+
+.ps-edit-title {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ps-edit-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ps-edit-row span {
+  color: var(--SmartThemeBodyColor);
+  font-weight: bold;
+}
+
+.ps-edit-priority {
+  flex: 1;
+}
+
+.ps-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.ps-btn-save {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.ps-btn-save:hover {
+  background: #43a047;
+}
+
+.ps-btn-cancel {
+  background: #9e9e9e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.ps-btn-cancel:hover {
+  background: #757575;
 }

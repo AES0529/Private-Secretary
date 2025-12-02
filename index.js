@@ -99,6 +99,40 @@ function toggleTaskComplete(taskId) {
   }
 }
 
+// 编辑任务
+function editTask(taskId, updates) {
+  const settings = getSettings();
+  const task = settings.tasks.find((t) => t.id === taskId);
+  if (!task) return false;
+
+  Object.assign(task, updates);
+  task.syncedToTickTick = false; // 编辑后重置同步状态
+  saveSettings();
+  return true;
+}
+
+// 清理过期任务（7天前的任务）
+function cleanupExpiredTasks() {
+  const settings = getSettings();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const cutoffDate = new Date(today);
+  cutoffDate.setDate(cutoffDate.getDate() - 7);
+  const cutoffStr = getDateString(cutoffDate);
+
+  const originalCount = settings.tasks.length;
+  settings.tasks = settings.tasks.filter((t) => t.date >= cutoffStr);
+  const deletedCount = originalCount - settings.tasks.length;
+
+  if (deletedCount > 0) {
+    saveSettings();
+    console.log(`[私人秘书] 自动清理了 ${deletedCount} 个过期任务`);
+  }
+
+  return deletedCount;
+}
+
 // 获取指定日期的任务
 function getTasksByDate(dateStr) {
   const settings = getSettings();
@@ -271,6 +305,51 @@ function formatTaskTime(task) {
   return task.time;
 }
 
+// 渲染任务编辑表单
+function renderEditForm(task) {
+  return `
+    <div class="ps-task-item editing" data-id="${task.id}">
+      <div class="ps-edit-form">
+        <input type="text" class="ps-edit-title" value="${
+          task.title
+        }" placeholder="任务标题" />
+        <div class="ps-edit-row">
+          <input type="date" class="ps-edit-date" value="${task.date}" />
+        </div>
+        <div class="ps-edit-row">
+          <input type="time" class="ps-edit-time" value="${
+            task.time
+          }" title="开始时间" />
+          <span class="ps-time-separator">-</span>
+          <input type="time" class="ps-edit-end-time" value="${
+            task.endTime || ""
+          }" title="结束时间（可选）" />
+        </div>
+        <div class="ps-edit-row">
+          <select class="ps-edit-priority">
+            <option value="${PRIORITY.URGENT_IMPORTANT}"${
+    task.priority === PRIORITY.URGENT_IMPORTANT ? " selected" : ""
+  }>🔴 重要且紧急</option>
+            <option value="${PRIORITY.NOT_URGENT_IMPORTANT}"${
+    task.priority === PRIORITY.NOT_URGENT_IMPORTANT ? " selected" : ""
+  }>🟡 重要不紧急</option>
+            <option value="${PRIORITY.URGENT_NOT_IMPORTANT}"${
+    task.priority === PRIORITY.URGENT_NOT_IMPORTANT ? " selected" : ""
+  }>🔵 不重要但紧急</option>
+            <option value="${PRIORITY.NOT_URGENT_NOT_IMPORTANT}"${
+    task.priority === PRIORITY.NOT_URGENT_NOT_IMPORTANT ? " selected" : ""
+  }>🟢 不重要不紧急</option>
+          </select>
+        </div>
+        <div class="ps-edit-actions">
+          <button class="ps-btn-save"><i class="fa-solid fa-check"></i> 保存</button>
+          <button class="ps-btn-cancel"><i class="fa-solid fa-xmark"></i> 取消</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // 渲染任务列表
 function renderTaskList(dateStr) {
   const tasks = getTasksByDate(dateStr);
@@ -307,6 +386,7 @@ function renderTaskList(dateStr) {
           </div>
         </div>
         <div class="ps-task-actions">
+          <button class="ps-btn-edit" title="编辑"><i class="fa-solid fa-pen"></i></button>
           <button class="ps-btn-delete" title="删除"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
@@ -348,6 +428,12 @@ function renderMainUI() {
           </button>
           <span id="ps-sync-status" class="ps-sync-status"></span>
         </div>
+      </div>
+      <div class="ps-cleanup-section">
+        <button id="ps-cleanup-btn" class="ps-btn-cleanup">
+          <i class="fa-solid fa-broom"></i> 一键清理过往任务
+        </button>
+        <span id="ps-cleanup-status" class="ps-cleanup-status"></span>
       </div>
       <div class="ps-main">
         <div class="ps-calendar-section">
@@ -442,26 +528,119 @@ function bindCalendarEvents() {
     });
 }
 
+// 检查是否有任务正在编辑中
+function isEditingTask() {
+  return $(".ps-task-item.editing").length > 0;
+}
+
+// 绑定编辑表单事件
+function bindEditFormEvents(taskItem, originalHtml) {
+  const taskId = taskItem.data("id");
+
+  // 保存按钮事件
+  taskItem.find(".ps-btn-save").on("click", function () {
+    const title = taskItem.find(".ps-edit-title").val().trim();
+    const date = taskItem.find(".ps-edit-date").val();
+    const time = taskItem.find(".ps-edit-time").val();
+    const endTime = taskItem.find(".ps-edit-end-time").val();
+    const priority = taskItem.find(".ps-edit-priority").val();
+
+    // 验证标题不能为空
+    if (!title) {
+      alert("任务标题不能为空");
+      return;
+    }
+
+    // 验证结束时间必须晚于开始时间
+    if (endTime && endTime <= time) {
+      alert("结束时间必须晚于开始时间");
+      return;
+    }
+
+    // 保存更新
+    const updates = {
+      title,
+      date,
+      time,
+      endTime: endTime || null,
+      priority,
+    };
+
+    if (editTask(taskId, updates)) {
+      updateCalendarView();
+      updateTaskListView();
+    }
+  });
+
+  // 取消按钮事件
+  taskItem.find(".ps-btn-cancel").on("click", function () {
+    // 恢复原始显示
+    taskItem.replaceWith(originalHtml);
+    bindTaskEvents();
+  });
+}
+
 // 绑定任务事件
 function bindTaskEvents() {
-  $('.ps-task-item input[type="checkbox"]')
+  // 复选框事件 - 编辑模式下禁用
+  $('.ps-task-item:not(.editing) input[type="checkbox"]')
     .off("change")
     .on("change", function () {
+      if (isEditingTask()) {
+        $(this).prop("checked", !$(this).prop("checked"));
+        return;
+      }
       const taskId = $(this).closest(".ps-task-item").data("id");
       toggleTaskComplete(taskId);
       updateCalendarView();
       updateTaskListView();
     });
 
-  $(".ps-btn-delete")
+  // 删除按钮事件 - 编辑模式下禁用
+  $(".ps-task-item:not(.editing) .ps-btn-delete")
     .off("click")
     .on("click", function () {
+      if (isEditingTask()) {
+        return;
+      }
       const taskId = $(this).closest(".ps-task-item").data("id");
       if (confirm("确定要删除这个任务吗？")) {
         deleteTask(taskId);
         updateCalendarView();
         updateTaskListView();
       }
+    });
+
+  // 编辑按钮事件
+  $(".ps-task-item:not(.editing) .ps-btn-edit")
+    .off("click")
+    .on("click", function () {
+      // 如果已有任务在编辑中，不允许编辑其他任务
+      if (isEditingTask()) {
+        alert("请先完成当前任务的编辑");
+        return;
+      }
+
+      const taskItem = $(this).closest(".ps-task-item");
+      const taskId = taskItem.data("id");
+      const originalHtml = taskItem.clone();
+
+      // 获取任务数据
+      const settings = getSettings();
+      const task = settings.tasks.find((t) => t.id === taskId);
+
+      if (!task) {
+        updateTaskListView();
+        return;
+      }
+
+      // 替换为编辑表单
+      const editFormHtml = renderEditForm(task);
+      taskItem.replaceWith(editFormHtml);
+
+      // 绑定编辑表单事件
+      const newTaskItem = $(`.ps-task-item[data-id="${taskId}"]`);
+      bindEditFormEvents(newTaskItem, originalHtml);
     });
 }
 
@@ -473,6 +652,12 @@ function initExtension() {
   if (document.getElementById("private_secretary_settings")) {
     console.log("[私人秘书] 扩展已存在，跳过初始化");
     return;
+  }
+
+  // 自动清理过期任务
+  const deletedCount = cleanupExpiredTasks();
+  if (deletedCount > 0) {
+    console.log(`[私人秘书] 启动时清理了 ${deletedCount} 个过期任务`);
   }
 
   // 初始化 selectedDate
@@ -639,6 +824,31 @@ function initExtension() {
         .removeClass("fa-spinner fa-spin")
         .addClass("fa-cloud-arrow-up");
     }
+  });
+
+  // 手动清理过期任务按钮事件
+  $("#ps-cleanup-btn").on("click", function () {
+    const status = $("#ps-cleanup-status");
+
+    if (!confirm("确定要清理7天前的所有任务吗？此操作不可撤销。")) {
+      return;
+    }
+
+    const deletedCount = cleanupExpiredTasks();
+
+    if (deletedCount > 0) {
+      status
+        .text(`✓ 已清理 ${deletedCount} 个过期任务`)
+        .removeClass("error")
+        .addClass("success");
+      updateCalendarView();
+      updateTaskListView();
+    } else {
+      status.text("没有需要清理的任务").removeClass("success error");
+    }
+
+    // 3秒后清除状态消息
+    setTimeout(() => status.text(""), 3000);
   });
 
   bindCalendarEvents();
